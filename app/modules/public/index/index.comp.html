@@ -1,0 +1,229 @@
+<!-- Animation -->
+<div ng-class="model.animate.page">
+	<!-- Header -->
+	<div class="header">
+		<div class="headerLogoText">Catstagram</div>
+		<div class="headerBtns">
+			<div class="headerBtn getAppBtn">Get the app</div>
+			<div class="headerBtn">Sign up</div>
+			<div class="headerBtn">Login</div>
+		</div>
+	</div>
+	<!-- User Profile -->
+	<div class="userProfile">
+		<div class="profileAvatar">
+			<div class="avatarImage" style="background-image:url('{{model.profile.avatar}}')"></div>
+			<!-- Loader -->
+			<div class="avatarLoader">
+				<div class="loaderIcon rotate"></div>
+			</div>	
+		</div>
+		<div class="profileData">
+			<div class="dataUsername">
+				{{model.profile.username}}
+				<div class="usernameFollow" ng-click="model.toggleFollow()">
+					<span ng-if="model.profile.follow">Following</span>
+					<span ng-if="!model.profile.follow">Follow</span>
+				</div>
+			</div>
+			<div class="dataStats">
+				<div class="stat" ng-repeat="item in model.profile.stats">
+					<h1>{{item.value}}</h1>
+					<p>{{item.key}}</p>
+				</div>
+			</div>
+			<div class="dataAbout" ng-bind-html="model.profile.about"></div>
+		</div>
+	</div>
+	<!-- Footer -->
+	<div class="footer">
+		Cool Cat's have <span class="footerBtn" ng-click="model.toggleAnalytics()">Stats</span> 
+	</div>
+	<!-- User Images -->
+	<div class="userImages">
+		<div class="userImage" ng-repeat="img in model.data" ng-click="model.togglePopup(img.path)">
+			<!-- Image -->
+			<div class="image" style="background-image:url('{{model.path}}{{img.path}}')"></div>
+			<!-- Loader -->
+			<div class="imageLoader">
+				<div class="loaderIcon rotate"></div>
+			</div>	
+		</div>
+	</div>
+</div>
+<!-- Popup Image -->
+<div class="userPopupImage" ng-class="model.popup.css">
+	<div class="imageCancel" ng-click="model.togglePopup('reset')">
+		<div class="cancelBtn">Close</div>
+	</div>
+	<div class="image">
+		<!-- Data -->
+		<div class="imageData" ng-class="{imageDataInactive:model.animate.comments}">
+			<!-- Image -->
+			<div class="dataImage" ng-if="model.popup.img.length != 0" style="background-image:url('{{model.path}}{{model.popup.img}}')"></div>
+			<!-- Loader -->
+			<div class="dataLoader">
+				<div class="loaderIcon rotate"></div>
+			</div>	
+			<!-- Footer -->
+			<div class="dataFooter">
+				<div class="footerLeftBtn fontIcon" ng-class="{footerLeftBtnActive:model.animate.like}" ng-click="model.toggleLike()">
+					<span ng-if="model.animate.like">&#xE87D;</span>
+					<span ng-if="!model.animate.like">&#xE87E;</span>
+				</div>				
+				<div class="footerRightBtn" ng-click="model.toggleComments()">
+					<span ng-if="model.animate.comments">Back</span>
+					<span ng-if="!model.animate.comments">Comments</span>
+				</div>
+			</div>
+		</div>
+		<!-- Comments -->
+		<div class="imageCommentsOuter" ng-class="{imageCommentsOuterActive:model.animate.comments}">
+			<div class="outerHeader">
+				<div class="headerAvatar" style="background-image:url('{{model.profile.avatar}}')"></div>
+				<div class="headerUsername">{{model.profile.username}}</div>
+				<div class="headerFollow" ng-click="model.toggleFollow()">
+					<span ng-if="model.profile.follow">Following</span>
+					<span ng-if="!model.profile.follow">Follow</span>
+				</div>
+			</div>
+			<div class="imageCommentsInner">
+				<!-- Spacer -->
+				<div class="innerCommentSpacer"></div>
+				<!-- Comments -->
+				<div ng-repeat="item in model.comments">
+					<div class="innerComment" ng-if="model.comments.length > 0">{{item.data}}</div>
+					<div class="clear"></div>
+				</div>
+				<!-- Comments Empty -->
+				<div class="innerCommentsEmpty" ng-if="model.comments.length == 0">
+					<h1>Oh Shucks,</h1>
+					<p>No Comments, but you can be the first.</p>
+				</div>
+				<!-- Spacer -->
+				<div class="innerCommentSpacer"></div>
+			</div>
+			<div class="outerFooter">
+				<div class="footerInput">
+					<input type="text" ng-model="model.comment" placeholder="Dont Be Shy, Post a Comment"/>
+				</div>
+				<div class="footerSubmitBtn fontIcon" ng-click="model.insertComment()">&#xE876;</div>
+			</div>
+		</div>
+	</div>
+	<div class="imagePrompt" ng-class="{imagePromptActive:model.popup.prompt.active}">
+		<div class="promptData promptData{{model.popup.prompt.status}}">
+			<h1>{{model.popup.prompt.title}}</h1>
+			<p>{{model.popup.prompt.text}}</p>
+		</div>
+	</div>
+</div>
+<!-- Analytics -->
+<div class="analytics" ng-class="{ analyticsActive:model.animate.analytics }">
+	<div class="analyticsHeader">
+		<div class="headerBackBtn fontIcon" ng-click="model.toggleAnalytics()">&#xE5C4;</div>
+		<div class="headerAvatar">
+			<div class="avatarImage" style="background-image:url('{{model.profile.avatar}}')"></div>
+		</div>
+		<div class="headerUsername">{{model.profile.username}}</div>
+		<div class="headerSearch">
+			<input type="text" placeholder="Search"/>
+		</div>
+	</div>
+	<div class="analyticsList">
+		<!-- Spacer -->
+		<div class="listSpacer"></div>
+		<!-- Countries of Followers  -->
+		<div class="listLabel">Comments vs. Likes</div>
+		<div class="listItems">
+			<div class="listItem" ng-class="{dataItemLast:$last}" ng-repeat="item in model.analytics.month | orderBy:'+':true" ng-init="total = item.likes+item.comments">
+				<div class="itemDay"><b>{{item.day}}</b>/05/17</div>
+				<div class="itemStat">
+					<div class="statValue">{{item.comments}}</div>
+					<div class="statLabel">Total Comments</div>
+				</div>
+				<div class="itemStat">
+					<div class="statValue">{{item.likes}}</div>
+					<div class="statLabel">Total Likes</div>
+				</div>
+				<div class="itemCompare">
+					<div class="compareFull">
+						<div class="compareLeft" style="width:{{((item.comments/total)*100).toFixed(2)}}%"></div>
+						<div class="compareRight" style="width:{{((item.likes/total)*100).toFixed(2)}}%"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="analyticsDisplay" ng-class="{analyticsDisplaySwitch:model.animate.analyticsSwitch}">
+		<!-- Spacer -->
+		<div class="displaySpacer"></div>	
+		<!-- Totals -->
+		<div class="displayLabel">Current Totals</div>
+		<div class="displayTotals">
+			<div class="total" ng-repeat="item in model.analytics.totals">
+				<div class="totalValue">{{item.value}}</div>
+				<div class="totalKey">{{item.key}}</div>
+				<div class="totalDivide"></div>
+			</div>
+			<div class="total">
+				<div class="totalValue">{{model.analytics.monthLikesTotal}}</div>
+				<div class="totalKey">Total Likes</div>
+				<div class="totalDivide"></div>
+			</div>
+			<div class="total">
+				<div class="totalValue">{{model.analytics.monthCommentsTotal}}</div>
+				<div class="totalKey">Total Comments</div>
+			</div>
+		</div>
+		<!-- Sex -->
+		<div class="displayLabel">Sex Breakdown</div>
+		<div class="displayLineOuter">
+			<div class="displayLineInner">
+				<div class="innerItemMale" style="width:{{model.analytics.sex[0].value}}%">
+					<div class="itemLabel">Male {{model.analytics.sex[0].value}}%</div>
+				</div>
+				<div class="innerItemFemale" style="width:{{model.analytics.sex[1].value}}%">
+					<div class="itemLabel">Female {{model.analytics.sex[1].value}}%</div>
+				</div>
+			</div>
+		</div>
+		<!-- Age -->
+		<div class="displayLabel">Age Breakdown</div>
+		<div class="displayBarChart">
+			<div class="chartFooter">
+				<div ng-repeat="item in model.analytics.age">
+					<div class="footerKey">
+						<div class="keyValue">
+							<div class="valuePercentage" style="height:{{item.value}}%">
+								<div class="percentage">{{item.value}}%</div>
+							</div>
+						</div>
+						{{item.key}}
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<!-- Countries -->
+		<div class="displayLabel">Countries of Followers</div>
+		<div class="displayInline">
+			<div class="inlineItem" ng-class="{dataItemLast:$last}" ng-repeat="item in model.analytics.countries">
+				<div class="itemValue">{{item.value}}</div>
+				<div class="itemKey">{{item.country}}</div>
+				<div class="itemPercentage">
+					<div class="percentageLineOuter">
+						<div class="percentageLineInner" style="width:{{item.percentage}}%">
+							<div class="percentage">{{item.percentage}}%</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="analyticsFooter">
+		You can <span class="footerBtn" ng-class="{footerBtnActive:model.animate.analyticsSwitch}" ng-click="model.switchAnalytics()">
+			Switch <div class="btnIcon fontIcon">&#xE5C8;</div>
+		</span> the View
+	</div>
+</div>
